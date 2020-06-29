@@ -1,7 +1,7 @@
 import React from 'react';
 import UploadCSV from './Upload_csv.js'
 // import './App.css';
-import './scss/main_container.scss'
+import './scss/styles.scss'
 import { Layout, Menu, Breadcrumb } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
 
