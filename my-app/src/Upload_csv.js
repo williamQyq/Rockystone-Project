@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React from "react";
 import './scss/styles.scss'
 import { parse } from "papaparse";
 import Dropzone from "react-dropzone";
@@ -6,31 +6,17 @@ import Dropzone from "react-dropzone";
 
 
 export default function UploadCSV() {
-    const [contacts, setContacts] = React.useState([
-        {tracking: "ffff", item_sku: "Fake"},
-    ]);
-    const [orders, setOrders] = React.useState();
-    const [fileNames, setFileNames] = useState([]);
+    
+    const [orders, setOrders] = React.useState([]);
+    const [fileNames, setFileNames] = React.useState([]);
     const handleDrop = (acceptedFiles) => {
         setFileNames(acceptedFiles.map(file => file.name));
         acceptedFiles.forEach(async (file) => {
             const text = await file.text();
             const result = parse(text, {header: true});
-            setContacts((existing) => [...existing, ...result.data]);
+            setOrders((existing) => [...existing, ...result.data]);
             console.log(result.data)        
         });
-        // acceptedFiles.forEach(async (file) => {
-        //     const text = await file.text();
-        //     const reader = new FileReader();
-
-        //     reader.onabort = () => console.log('file reading was aborted');
-        //     reader.onerror = () => console.log('file reading has failed');
-        //     reader.onload = () => {
-        //         const binaryStr = reader.result
-        //         console.log(binaryStr)
-        //     }
-        //     reader.readAsArrayBuffer(file)  
-        // });
     }
     
 
@@ -53,9 +39,9 @@ export default function UploadCSV() {
             </ul>
             <ul>
                 
-                {contacts.map((contact) => (
-                <li key={contact.tracking}>
-                    <strong>{contact.tracking}</strong>: {contact.item_sku}
+                {orders.map((order) => (
+                <li key={order.tracking}>
+                    <strong>{order.tracking}</strong>: {order.item_sku}
                 </li>
                 ))}
             </ul>

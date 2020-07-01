@@ -1,4 +1,5 @@
 import React from 'react';
+
 import UploadCSV from './Upload_csv.js'
 // import './App.css';
 import './scss/styles.scss'
@@ -8,20 +9,42 @@ import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
-function App() {
-  return (
-    <Layout>
-      <TopHeader/>
+class App extends React.Component {
+  constructor(props){
+    super(props);
+    
+    this.state = {
+      content_key: '1'
+    };
+
+    this.handleContentKey = this.handleContentKey.bind(this);
+    this.getContentKey = this.getContentKey.bind(this);
+  }
+
+  handleContentKey(content_key) {
+    this.setState({content_key});
+  }
+  getContentKey() {
+    const content_key = this.state.content_key;
+    return content_key;
+  }
+   
+  render(){
+
+    return (
       <Layout>
-        <LeftSider/>
-        <Layout style={{ padding: '0 24px 24px'}}>
-          <MainContent/>
+        <TopHeader/>
+        <Layout>
+          <LeftSider onContentKeyChange={this.handleContentKey}/>
+          <Layout style={{ padding: '0 24px 24px'}}>
+            <MainContent getContentKey={this.getContentKey}/>
+          </Layout>
         </Layout>
       </Layout>
-    </Layout>
-    
+      
 
-  );
+    );
+  }
 }
 
 class TopHeader extends React.Component {
@@ -39,8 +62,17 @@ class TopHeader extends React.Component {
   }
 }
 
-class LeftSider extends React.Component {
-  render() {
+class LeftSider extends React.Component{
+    constructor(props) {
+      super(props);
+      this.handleContentKey = this.handleContentKey.bind(this);
+    }
+    handleContentKey(key) {
+      console.log("Menu "+key+" is Clicked");
+      this.props.onContentKeyChange(key);
+    }
+
+    render(){
     return(
       <Sider width={200} className="site-layout-background">
               <Menu
@@ -49,9 +81,10 @@ class LeftSider extends React.Component {
                 defaultSelectedKeys={['1']}
                 defaultOpenKeys={['sub1']}
                 style={{ height: '100%', borderRight: 0 }}
+                onClick={(e) => this.handleContentKey(e.key)}
               >
                 <SubMenu key="sub1" icon={<UserOutlined />} title="subnav 1">
-                  <Menu.Item key="1">option1</Menu.Item>
+                  <Menu.Item key="1">Upload Order Report</Menu.Item>
                   <Menu.Item key="2">option2</Menu.Item>
                   <Menu.Item key="3">option3</Menu.Item>
                   <Menu.Item key="4">option4</Menu.Item>
@@ -71,11 +104,23 @@ class LeftSider extends React.Component {
               </Menu>
             </Sider>
     );
-  }
+    }
 }
 
 class MainContent extends React.Component {
+  
+  contentSwitch = () => {
+    const key = this.props.getContentKey();
+      switch(key) {
+        case '1':
+          return <UploadCSV/>;
+        default:
+          break;
+      }
+  }
+  
   render() {
+    
     return(
       <div style={{height:'100%'}}>
       <Breadcrumb style={{ margin: '16px 0' }}>
@@ -92,7 +137,7 @@ class MainContent extends React.Component {
             height: '100%'
           }}
         >
-          <UploadCSV/>
+          {this.contentSwitch()}
         </Content>
         </div>
     );
