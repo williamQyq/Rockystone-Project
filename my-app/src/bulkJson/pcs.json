@@ -1,0 +1,8 @@
+{
+    "_id":3,
+    "upc":"20202",
+    "type":"laptop",
+
+"import add cmd":
+"use --drop to overriden collection mongoimport --host Cluster0-shard-0/cluster0-shard-00-00-lkscp.mongodb.net:27017,cluster0-shard-00-01-lkscp.mongodb.net:27017,cluster0-shard-00-02-lkscp.mongodb.net:27017 --ssl --username w --password q --authenticationDatabase admin --db Product_Info --collection other_info --file ./pcs.json"
+}

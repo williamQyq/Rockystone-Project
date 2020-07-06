@@ -1,10 +1,11 @@
 import React from 'react';
 
 import UploadCSV from './Upload_csv.js'
-// import './App.css';
+import PcConfiguration from './PcConfiguration.js'
 import './scss/styles.scss'
 import { Layout, Menu, Breadcrumb } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
+import EditableTable from './PcConfiguration.js';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -84,8 +85,8 @@ class LeftSider extends React.Component{
                 onClick={(e) => this.handleContentKey(e.key)}
               >
                 <SubMenu key="sub1" icon={<UserOutlined />} title="subnav 1">
-                  <Menu.Item key="1">Upload Order Report</Menu.Item>
-                  <Menu.Item key="2">option2</Menu.Item>
+                  <Menu.Item key="1">Order Report</Menu.Item>
+                  <Menu.Item key="2">PC Configuration</Menu.Item>
                   <Menu.Item key="3">option3</Menu.Item>
                   <Menu.Item key="4">option4</Menu.Item>
                 </SubMenu>
@@ -114,6 +115,9 @@ class MainContent extends React.Component {
       switch(key) {
         case '1':
           return <UploadCSV/>;
+        case '2':
+          // return <PcConfiguration/>;
+          return <EditableTable/>;
         default:
           break;
       }
