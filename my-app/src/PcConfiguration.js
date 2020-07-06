@@ -1,9 +1,9 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import { Table, Input, Button, Space } from 'antd';
+import { Table, Input, Button, Space, Popover } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
-import data from './data';
+import {data, content} from './data';
 
 
 
@@ -82,8 +82,9 @@ export default class PcConfiguration extends React.Component {
         title: 'Item Name',
         dataIndex: 'item_name',
         key: 'item_name',
-        width: '30%',
+        width: '20%',
         ...this.getColumnSearchProps('item_name'),
+        render: (text) => <a><Popover title="Specifications" content = {content}>{text}</Popover></a>,
       },
       {
         title: 'Ram',

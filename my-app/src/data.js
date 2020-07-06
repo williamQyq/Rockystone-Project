@@ -1,3 +1,5 @@
+import React from 'react';
+
  const data = [
     {
       key: '1',
@@ -112,5 +114,15 @@
       hard_drive: 512,
     },
   ];
+
+  const content = (
+    <div>
+        <p>Content</p>
+        <p>Content</p>
+    </div>
+  );
   
-  export default data;
+  export {
+      data,
+      content,
+  }
