@@ -6,6 +6,7 @@ import Dropzone from "react-dropzone";
 
 
 export default function UploadCSV() {
+    //const [count, setCount] = React.useState(0);
     
     const [orders, setOrders] = React.useState([]);
     const [fileNames, setFileNames] = React.useState([]);
@@ -15,11 +16,10 @@ export default function UploadCSV() {
             const text = await file.text();
             const result = parse(text, {header: true});
             setOrders((existing) => [...existing, ...result.data]);
-            console.log(result.data)        
+            console.log(result.data);        
         });
     }
     
-
     return (
         <div className="drop-zone">
         <Dropzone onDrop={handleDrop}>
@@ -39,8 +39,8 @@ export default function UploadCSV() {
             </ul>
             <ul>
                 
-                {orders.map((order) => (
-                <li key={order.tracking}>
+                {orders.map((order,i)=>(
+                <li key={i}>
                     <strong>{order.tracking}</strong>: {order.item_sku}
                 </li>
                 ))}

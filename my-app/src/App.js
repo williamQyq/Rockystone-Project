@@ -5,7 +5,6 @@ import PcConfiguration from './PcConfiguration.js'
 import './scss/styles.scss'
 import { Layout, Menu, Breadcrumb } from 'antd';
 import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons';
-import EditableTable from './PcConfiguration.js';
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -116,8 +115,7 @@ class MainContent extends React.Component {
         case '1':
           return <UploadCSV/>;
         case '2':
-          // return <PcConfiguration/>;
-          return <EditableTable/>;
+          return <PcConfiguration/>;
         default:
           break;
       }

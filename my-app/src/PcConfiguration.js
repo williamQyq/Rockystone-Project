@@ -7,12 +7,14 @@ import {data, content} from './data';
 
 
 
+
 export default class PcConfiguration extends React.Component {
   state = {
     searchText: '',
     searchedColumn: '',
+    data:[{}]
   };
-
+ 
   getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
@@ -84,7 +86,14 @@ export default class PcConfiguration extends React.Component {
         key: 'item_name',
         width: '20%',
         ...this.getColumnSearchProps('item_name'),
-        render: (text) => <a><Popover title="Specifications" content = {content}>{text}</Popover></a>,
+        render: (text) => <Popover title="Specifications" content = {content}>{text}</Popover>,
+      },
+      {
+        title: 'upc',
+        dataIndex: 'upc',
+        key: 'upc',
+        width: '20%',
+        ...this.getColumnSearchProps('upc'),
       },
       {
         title: 'Ram',
@@ -99,7 +108,18 @@ export default class PcConfiguration extends React.Component {
         key: 'hard_drive',
         ...this.getColumnSearchProps('hard_drive'),
       },
+      
     ];
+
+    //console.log(data);
+    //const temp = JSON.stringify(data);
+    console.log(typeof data);
+    //const count = Object.keys(data[0]["ram"]).length;
+    data.map((data,index) => {
+      
+        console.log(data.upc);
+        return 1;
+    })
     return <Table columns={columns} dataSource={data} />;
   }
 }
