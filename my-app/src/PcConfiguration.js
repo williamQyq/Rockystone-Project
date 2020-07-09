@@ -114,7 +114,8 @@ export default class PcConfiguration extends React.Component {
     //console.log(data);
     //const temp = JSON.stringify(data);
     console.log(typeof data);
-    //const count = Object.keys(data[0]["ram"]).length;
+    // const count = Object.keys(data[0]["ram"]).length;
+    // console.log("count:========"+count)
     data.map((data,index) => {
       
         console.log(data.upc);
