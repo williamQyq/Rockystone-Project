@@ -5,10 +5,9 @@ import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 import {data, content} from './data';
 
+import ReactToPrint from 'react-to-print';
 
-
-
-export default class PcConfiguration extends React.Component {
+class PcConfiguration extends React.Component {
   state = {
     searchText: '',
     searchedColumn: '',
@@ -121,6 +120,30 @@ export default class PcConfiguration extends React.Component {
         console.log(data.upc);
         return 1;
     })
-    return <Table columns={columns} dataSource={data} />;
+    return (
+        <div>
+            
+        <Table columns={columns} dataSource={data}/>
+        
+        </div>
+        );
   }
 }
+
+export default class Example extends React.Component {
+    render() {
+      return (
+        <div>
+          <PcConfiguration ref={el => (this.componentRef = el)} />
+          <ReactToPrint
+            trigger={() => {
+              // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
+              // to the root node of the returned component as it will be overwritten.
+              return <a href="#">Print this out!</a>;
+            }}
+            content={() => this.componentRef}
+          />
+        </div>
+      );
+    }
+  }

@@ -19,11 +19,10 @@ export default function UploadCSV() {
             setOrders((existing) => [...existing, ...result.data]);
             //console.log(result.data);        
         });
-
-        process_order(orders);
     
     }
     
+    process_order(orders);
     return (
         <div className="drop-zone">
         <Dropzone onDrop={handleDrop}>
@@ -64,78 +63,88 @@ function process_order(orders) {
 }
 
 function parse_sku(sku) {
-    let upgraded_upc;
+    let str_upc;
+    let str_config;
     let upgraded_config;
     let sku_parse=[];
+    let original_config;
 
     const upc_index = 0;
     const config_index = 1;
-    const bundle_index = 2;
+    //const bundle_index = 2;
 
     //split upgraded upc, upgraded config, bundle
     if(typeof sku == 'string') {
         sku_parse = sku.split('-');
-        upgraded_upc = sku_parse[upc_index];
-        upgraded_config = sku_parse[config_index];
+        str_upc = sku_parse[upc_index];
+        str_config = sku_parse[config_index];
         
-        console.log("upgraded Config==========="+upgraded_config);
+        console.log("upgraded Config==========="+str_config);
     
         //get original config
         data.map((data,index) => {
-            if(data.upc === upgraded_upc) {
+            if(data.upc === str_upc) {
                 //compare ram;
-                let ram_obj = data.ram;
-                let m2_obj = data.m2;
-                let hard_drive_obj = data.hard_drive;
-                compare_config(upgraded_config,ram_obj,m2_obj,hard_drive_obj);
+                original_config={
+                    ram: data.ram,
+                    m2: data.m2,
+                    hard_drive: data.hard_drive,
+                }
+                //base on original_config generate upgraded config.
+                upgraded_config = generate_config(str_config,original_config);
+                //compare_config(upgraded_config,original_config);
             }
             return true;
         })
     }
-    
 }
 
-function compare_config(config,ram,ssd){
-    let ram_slot_num = Object.keys(ram).length;
-    const pivot = 16;
-    let upgraded_config = {};
-    let upg_ram_capacity,upg_ssd_capacity,upg_hdd_capacity;
-    let ram_tmp=[];
-    
-    
-    //get upgraded ram, upgraded ssd , upgraded hdd capacity
-    upg_ram_capacity = chunkString2Int(config,0,2);
-    upg_ssd_capacity = chunkString2Int(config,2,6);
-    upg_hdd_capacity = chunkString2Int(config,6,8);
-    let ssd_type = config.substring(config.length - 1);
-    
-    //push ram[] into object
-   
-    upgraded_config["ram"]=ram;
+function generate_config(str, original_config){
+    //parse str_config 
+    let upg_ram_capacity = chunkString2Int(str,0,2);
+    let upg_ssd_capacity = chunkString2Int(str,2,6);
+    let upg_hdd_capacity = chunkString2Int(str,6,8);
+    let ssd_type = str.substring(str.length - 1);
+    let ram_slot_count = Object.keys(original_config.ram).length;
 
-    //push ssd[] into object
-    switch(ssd_type){
-        case 'N':
-            upgraded_config["m2"]={
-                sata:upg_ssd_capacity
+    let config = {};
+
+    //set ram in config object
+    let ram_combo= generate_ram_combo(upg_ram_capacity,ram_slot_count);
+    console.log("ram combo================"+ram_combo);
+    config["ram"] = ram_combo;
+
+
+    return config;
+
+}
+function generate_ram_combo(ram_capacity,ram_slot_count){
+    const base_ram_array = [0,4,8,16];
+    let ram_combo=[];
+
+    //generate combo for two ram slots
+    if(ram_slot_count == 2){
+        for(let i = 0; i< base_ram_array.length; i++){
+            for(let j = 0; j<base_ram_array.length; i++){
+
+                if(ram_capacity===(base_ram_array[i]+base_ram_array[j])) {
+                    console.log("found Ram combo.");
+                    ram_combo.push(base_ram_array[i]);
+                    ram_combo.push(base_ram_array[j]);
+                    return ram_combo;
+                }
             }
-            break;
-        case 'P':
-            upgraded_config["m2"]={
-                pcie:upg_ssd_capacity
+        }
+    } else if(ram_slot_count == 1){                         //generate combo for 1 ram slot
+        for(let i= 0; i<base_ram_array.length; i++){
+            if(ram_capacity===base_ram_array[i]){
+                ram_combo.push(base_ram_array[i]);
+                return ram_combo;
             }
-            break;
-        case 'V':
-            upgraded_config["m2"]={
-                nvme:upg_ssd_capacity
-            }
-            break;
-        default:
-            return false;
+        }
     }
-    
-    return upgraded_config;
 }
+
 
 function chunkString2Int(str, i,j){
     let substr = str.substring(i,j);

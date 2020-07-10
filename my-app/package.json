@@ -13,7 +13,8 @@
     "react-dropzone": "^11.0.1",
     "react-highlight-words": "^0.16.0",
     "react-papaparse": "^3.3.0",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "react-to-print": "^2.9.0"
   },
   "scripts": {
     "start": "react-scripts start",

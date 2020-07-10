@@ -24,6 +24,7 @@ import React from 'react';
             nvme:true
         },
         hard_drive: 1
+        
       },
     {
         key: '2',
@@ -35,7 +36,14 @@ import React from 'react';
             pcie:true,
             nvme:true
         },
-        hard_drive: 1
+        hard_drive:{
+            hdd:1,
+            ssd:false
+        },
+        onboard:{
+            ram:0,
+            hard_drive:0
+        }
       },
     
     
