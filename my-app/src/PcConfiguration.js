@@ -123,7 +123,7 @@ class PcConfiguration extends React.Component {
     return (
         <div>
             
-        <Table columns={columns} dataSource={data}/>
+        <Table pagination={{total: data.length, pageSize: data.length, hideOnSinglePage:true}}columns={columns} dataSource={data}/>
         
         </div>
         );

@@ -3,29 +3,56 @@ import './scss/styles.scss'
 import { parse } from "papaparse";
 import Dropzone from "react-dropzone";
 import {data} from './data';
+import OperationTable from "./OpeartionTable";
+//import Dragger from "antd/lib/upload/Dragger";
+import { Upload, message } from 'antd';
+import { InboxOutlined } from '@ant-design/icons';
 
-
-
+const {Dragger} = Upload;
 export default function UploadCSV() {
     //const [count, setCount] = React.useState(0);
     
-    const [orders, setOrders] = React.useState([]);
-    const [fileNames, setFileNames] = React.useState([]);
-    const handleDrop = (acceptedFiles) => {
-        setFileNames(acceptedFiles.map(file => file.name));
-        acceptedFiles.forEach(async (file) => {
-            const text = await file.text();
-            const result = parse(text, {header: true});
-            setOrders((existing) => [...existing, ...result.data]);
-            //console.log(result.data);        
-        });
+    // const [orders, setOrders] = React.useState([]);
+    // const [fileNames, setFileNames] = React.useState([]);
+    // const handleDrop = (acceptedFiles) => {
+    //     setFileNames(acceptedFiles.map(file => file.name));
+    //     acceptedFiles.forEach(async (file) => {
+    //         const text = await file.text();
+    //         const result = parse(text, {header: true});
+    //         setOrders((existing) => [...existing, ...result.data]);
+    //         //console.log(result.data);        
+    //     });
     
-    }
+    // }
+
+
+    const props={
+        name: 'file',
+        multiple: true,
+        action: '',
+        onChange(info) {
+            const { status } = info.file;
+            if (status !== 'uploading') {
+            console.log(info.file, info.fileList);
+            }
+            if (status === 'done') {
+            message.success(`${info.file.name} file uploaded successfully.`);
+            } else if (status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+            }
+
+            // console.log("info file======"+info.file);
+        },
+    };
+
+    //process_order(orders);
+   
     
-    process_order(orders);
+
+
     return (
         <div className="drop-zone">
-        <Dropzone onDrop={handleDrop}>
+        {/* <Dropzone onDrop={handleDrop}>
             {({ getRootProps, getInputProps }) => (
             <div {...getRootProps({ className: "dropzone" })}>
                 <input {...getInputProps()} />
@@ -48,7 +75,19 @@ export default function UploadCSV() {
                 </li>
                 ))}
             </ul>
-        </div>
+        </div> */}
+        <Dragger {...props}>
+            <p className="ant-upload-drag-icon">
+                <InboxOutlined/>
+            </p>
+            <p className="ant-upload-text">Click or drag file to this area to upload</p>
+            <p className="ant-upload-hint">
+                Support for a single or bulk upload. Strictly prohibit from uploading company data or other
+                band files
+            </p>
+        </Dragger>
+        
+        <OperationTable/>
         </div>
   );
 }
@@ -93,6 +132,7 @@ function parse_sku(sku) {
                 //base on original_config generate upgraded config.
                 upgraded_config = generate_config(str_config,original_config);
                 //compare_config(upgraded_config,original_config);
+
             }
             return true;
         })
@@ -113,6 +153,8 @@ function generate_config(str, original_config){
     let ram_combo= generate_ram_combo(upg_ram_capacity,ram_slot_count);
     console.log("ram combo================"+ram_combo);
     config["ram"] = ram_combo;
+    
+
 
 
     return config;
@@ -123,7 +165,7 @@ function generate_ram_combo(ram_capacity,ram_slot_count){
     let ram_combo=[];
 
     //generate combo for two ram slots
-    if(ram_slot_count == 2){
+    if(ram_slot_count === 2){
         for(let i = 0; i< base_ram_array.length; i++){
             for(let j = 0; j<base_ram_array.length; i++){
 
@@ -135,7 +177,7 @@ function generate_ram_combo(ram_capacity,ram_slot_count){
                 }
             }
         }
-    } else if(ram_slot_count == 1){                         //generate combo for 1 ram slot
+    } else if(ram_slot_count === 1){                         //generate combo for 1 ram slot
         for(let i= 0; i<base_ram_array.length; i++){
             if(ram_capacity===base_ram_array[i]){
                 ram_combo.push(base_ram_array[i]);
