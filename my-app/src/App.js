@@ -57,7 +57,7 @@ class TopHeader extends React.Component {
             <Menu.Item key="2">ProE</Menu.Item>
             <Menu.Item key="3">Beau</Menu.Item>
           </Menu>
-        </Header>
+      </Header>
     );
   }
 }

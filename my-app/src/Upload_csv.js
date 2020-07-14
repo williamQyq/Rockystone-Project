@@ -12,7 +12,7 @@ const {Dragger} = Upload;
 export default function UploadCSV() {
     //const [count, setCount] = React.useState(0);
     
-    // const [orders, setOrders] = React.useState([]);
+    const [orders, setOrders] = React.useState([]);
     // const [fileNames, setFileNames] = React.useState([]);
     // const handleDrop = (acceptedFiles) => {
     //     setFileNames(acceptedFiles.map(file => file.name));
@@ -24,25 +24,47 @@ export default function UploadCSV() {
     //     });
     
     // }
-
+    const dummyRequest = ({ file, onSuccess }) => {
+        setTimeout(()=> {
+            onSuccess("ok");
+        },0);
+    };
 
     const props={
         name: 'file',
         multiple: true,
-        action: '',
+        customRequest({file, onSuccess}){
+            setTimeout(()=>{
+                onSuccess("ok");
+            },0);
+        },
         onChange(info) {
             const { status } = info.file;
             if (status !== 'uploading') {
-            console.log(info.file, info.fileList);
+                //console.log(info.file, info.fileList);
             }
             if (status === 'done') {
-            message.success(`${info.file.name} file uploaded successfully.`);
+                message.success(`${info.file.name} file uploaded successfully.`);
+                
             } else if (status === 'error') {
-            message.error(`${info.file.name} file upload failed.`);
+                message.error(`${info.file.name} file upload failed.`);
             }
 
-            // console.log("info file======"+info.file);
+            // console.log("info================="+info.file);
         },
+        // beforeUpload (file) {
+        //     const reader = new FileReader();
+    
+        //     reader.onload = e => {
+        //         console.log(e.target.result);
+        //     };
+        //     const text = reader.readAsText(file);
+        //     const result = parse(text,{header:true});
+        //     console.log(result.data);
+    
+        //     // Prevent upload
+        //     return false;
+        // }
     };
 
     //process_order(orders);
@@ -76,7 +98,7 @@ export default function UploadCSV() {
                 ))}
             </ul>
         </div> */}
-        <Dragger {...props}>
+        <Dragger accept=".csv" {...props}>
             <p className="ant-upload-drag-icon">
                 <InboxOutlined/>
             </p>
