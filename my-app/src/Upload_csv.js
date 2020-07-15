@@ -35,8 +35,7 @@ export default function UploadCSV() {
             const text = await file.text();
             const result = parse(text,{header:true});
             setOrders((existing) => [...existing, ...result.data]);
-            console.log(result.data);
-
+            //console.log(result.data);
         }
     };
 
@@ -55,7 +54,7 @@ export default function UploadCSV() {
             </p>
         </Dragger>
         
-        <OperationTable/>
+        <OperationTable data = {data}/>
         </div>
   );
 }
@@ -98,12 +97,17 @@ function parse_sku(sku) {
                 }
                 //base on original_config generate upgraded config.
                 upgraded_config = generate_config(str_config,original_config);
-                //compare_config(upgraded_config,original_config);
+                generate_operation(upgraded_config,original_config);
 
             }
             return true;
         })
     }
+}
+function generate_operation(config_1, config_2){
+    console.log("*****",config_1)
+    console.log("=====",config_2);
+    
 }
 
 function generate_config(str, original_config){
@@ -121,6 +125,11 @@ function generate_config(str, original_config){
     console.log("ram combo================"+ram_combo);
     config["ram"] = ram_combo;
     
+    //set m2 in config object
+    //..............
+
+    //set hard drive in config object
+    //..............
 
 
 
