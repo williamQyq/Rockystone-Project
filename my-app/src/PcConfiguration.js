@@ -139,7 +139,7 @@ export default class Example extends React.Component {
             trigger={() => {
               // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
               // to the root node of the returned component as it will be overwritten.
-              return <a href="#">Print this out!</a>;
+              return <Button type="primary">Print this out!</Button>;
             }}
             content={() => this.componentRef}
           />

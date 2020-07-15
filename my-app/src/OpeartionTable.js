@@ -1,9 +1,26 @@
 import React from "react";
-import {Table} from 'antd';
+import {Table, Button} from 'antd';
+import ReactToPrint from 'react-to-print';
 
-export default class OpeartionTable extends React.Component {
-    
-    
+export default class OpeTable extends React.Component {
+    render(){
+        return(
+            <div>
+            <OperationTable  ref={el => (this.componentRef = el)}/>
+            <ReactToPrint
+            trigger={() => {
+              // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
+              // to the root node of the returned component as it will be overwritten.
+              return <Button type="primary">Print this out!</Button>;
+            }}
+            content={() => this.componentRef}
+          />
+            </div>
+        );
+    }
+}
+
+class OperationTable extends React.Component {
     
     render(){
 

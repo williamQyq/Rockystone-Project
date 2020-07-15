@@ -1,34 +1,16 @@
 import React from "react";
 import './scss/styles.scss'
 import { parse } from "papaparse";
-import Dropzone from "react-dropzone";
 import {data} from './data';
 import OperationTable from "./OpeartionTable";
-//import Dragger from "antd/lib/upload/Dragger";
 import { Upload, message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 
 const {Dragger} = Upload;
+
 export default function UploadCSV() {
-    //const [count, setCount] = React.useState(0);
     
     const [orders, setOrders] = React.useState([]);
-    // const [fileNames, setFileNames] = React.useState([]);
-    // const handleDrop = (acceptedFiles) => {
-    //     setFileNames(acceptedFiles.map(file => file.name));
-    //     acceptedFiles.forEach(async (file) => {
-    //         const text = await file.text();
-    //         const result = parse(text, {header: true});
-    //         setOrders((existing) => [...existing, ...result.data]);
-    //         //console.log(result.data);        
-    //     });
-    
-    // }
-    const dummyRequest = ({ file, onSuccess }) => {
-        setTimeout(()=> {
-            onSuccess("ok");
-        },0);
-    };
 
     const props={
         name: 'file',
@@ -45,59 +27,23 @@ export default function UploadCSV() {
             }
             if (status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully.`);
-                
             } else if (status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
             }
-
-            // console.log("info================="+info.file);
         },
-        // beforeUpload (file) {
-        //     const reader = new FileReader();
-    
-        //     reader.onload = e => {
-        //         console.log(e.target.result);
-        //     };
-        //     const text = reader.readAsText(file);
-        //     const result = parse(text,{header:true});
-        //     console.log(result.data);
-    
-        //     // Prevent upload
-        //     return false;
-        // }
+        async beforeUpload (file) {
+            const text = await file.text();
+            const result = parse(text,{header:true});
+            setOrders((existing) => [...existing, ...result.data]);
+            console.log(result.data);
+
+        }
     };
 
-    //process_order(orders);
-   
-    
-
+    process_order(orders);
 
     return (
         <div className="drop-zone">
-        {/* <Dropzone onDrop={handleDrop}>
-            {({ getRootProps, getInputProps }) => (
-            <div {...getRootProps({ className: "dropzone" })}>
-                <input {...getInputProps()} />
-                <p>Drag'n'drop files, or click to select files</p>
-            </div>
-            )}
-        </Dropzone>
-        <div>
-            <strong>Files:</strong>
-            <ul>
-            {fileNames.map(fileName => (
-                <li key={fileName}>{fileName}</li>
-            ))}
-            </ul>
-            <ul>
-                
-                {orders.map((order,i)=>(
-                <li key={i}>
-                    <strong>{order.tracking}</strong>: {order.item_sku}
-                </li>
-                ))}
-            </ul>
-        </div> */}
         <Dragger accept=".csv" {...props}>
             <p className="ant-upload-drag-icon">
                 <InboxOutlined/>
@@ -118,7 +64,6 @@ function process_order(orders) {
     orders.map((order,i)=>
     {
         parse_sku(order.item_sku);
-        //console.log(typeof order.item_sku);
         return true;
     })
 }
