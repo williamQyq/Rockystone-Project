@@ -2,11 +2,14 @@ import React from "react";
 import {Table, Button} from 'antd';
 import ReactToPrint from 'react-to-print';
 
-export default class OpeTable extends React.Component {
+export default class OperationTable extends React.Component {
+   
     render(){
+
+       // console.log("opers=====================",this.props.operations[0].upc);
         return(
             <div>
-            <OperationTable  ref={el => (this.componentRef = el)}/>
+            <OperTable operations={this.props.operations} ref={el => (this.componentRef = el)}/>
             <ReactToPrint
             trigger={() => {
               // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
@@ -20,8 +23,8 @@ export default class OpeTable extends React.Component {
     }
 }
 
-class OperationTable extends React.Component {
-    
+class OperTable extends React.Component {
+
     render(){
 
         const columns = [
@@ -39,14 +42,14 @@ class OperationTable extends React.Component {
             },
             
         ];
-        const upgrade_data = [{}];
+        const upgrade_data = this.props.operations;
         return (
             <Table pagination={{
                 total: upgrade_data.length, 
                 pageSize: upgrade_data.length, 
                 hideOnSinglePage:true}}
                 columns={columns} 
-                //dataSource={upgrade_data}
+                dataSource={upgrade_data}
             />
         );
     }

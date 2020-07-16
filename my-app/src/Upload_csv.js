@@ -11,7 +11,7 @@ const {Dragger} = Upload;
 export default function UploadCSV() {
     
     const [orders, setOrders] = React.useState([]);
-
+    const [opers, setOpers] = React.useState([{}]);
     const props={
         name: 'file',
         multiple: true,
@@ -54,7 +54,7 @@ export default function UploadCSV() {
             </p>
         </Dragger>
         
-        <OperationTable data = {data}/>
+        <OperationTable operations = {opers}/>
         </div>
   );
 }
@@ -91,6 +91,7 @@ function parse_sku(sku) {
             if(data.upc === str_upc) {
                 //compare ram;
                 original_config={
+                    upc: data.upc,
                     ram: data.ram,
                     m2: data.m2,
                     hard_drive: data.hard_drive,
@@ -104,9 +105,18 @@ function parse_sku(sku) {
         })
     }
 }
+//config 1 is the updated configuration
+//config 2 is the original configuration
 function generate_operation(config_1, config_2){
-    console.log("*****",config_1)
+    //set upc in opers 
+    let a = [];
+    let b = {upc:'1222'};
+    a.push(b);
+    
+    console.log("*****",config_1);
     console.log("=====",config_2);
+
+
     
 }
 
