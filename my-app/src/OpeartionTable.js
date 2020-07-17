@@ -42,14 +42,13 @@ class OperTable extends React.Component {
             },
             
         ];
-        const upgrade_data = this.props.operations;
         return (
             <Table pagination={{
-                total: upgrade_data.length, 
-                pageSize: upgrade_data.length, 
+                total: this.props.operations.length, 
+                pageSize: this.props.operations.length, 
                 hideOnSinglePage:true}}
                 columns={columns} 
-                dataSource={upgrade_data}
+                dataSource={this.props.operations}
             />
         );
     }

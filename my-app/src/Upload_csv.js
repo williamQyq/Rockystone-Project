@@ -8,117 +8,132 @@ import { InboxOutlined } from '@ant-design/icons';
 
 const {Dragger} = Upload;
 
-export default function UploadCSV() {
-    
-    const [orders, setOrders] = React.useState([]);
-    const [opers, setOpers] = React.useState([{}]);
-    const props={
-        name: 'file',
-        multiple: true,
-        customRequest({file, onSuccess}){
-            setTimeout(()=>{
-                onSuccess("ok");
-            },0);
-        },
-        onChange(info) {
-            const { status } = info.file;
-            if (status !== 'uploading') {
-                //console.log(info.file, info.fileList);
-            }
-            if (status === 'done') {
-                message.success(`${info.file.name} file uploaded successfully.`);
-            } else if (status === 'error') {
-                message.error(`${info.file.name} file upload failed.`);
-            }
-        },
-        async beforeUpload (file) {
-            const text = await file.text();
-            const result = parse(text,{header:true});
-            setOrders((existing) => [...existing, ...result.data]);
-            //console.log(result.data);
+export default class OrderUpload extends React.Component{
+    constructor(props){
+        super(props);
+
+        this.state = {
+            orders: [],
+            opers: []
+        };
+        //this.*** = this.***.bind(this);
+        this.beforeUpload = this.beforeUpload.bind(this);
+    }
+    //simulate post request success status, elimate action props in Upload 
+    customRequest = ({file, onSuccess})=>{
+        setTimeout(()=>{
+            onSuccess("ok");
+        },0);
+    }
+
+    onChange=(info) =>{
+        const { status } = info.file;
+        if (status !== 'uploading') {
+            //console.log(info.file, info.fileList);
         }
-    };
+        if (status === 'done') {
+            message.success(`${info.file.name} file uploaded successfully.`);
+        } else if (status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+        }
+    }
 
-    process_order(orders);
-
-    return (
-        <div className="drop-zone">
-        <Dragger accept=".csv" {...props}>
-            <p className="ant-upload-drag-icon">
-                <InboxOutlined/>
-            </p>
-            <p className="ant-upload-text">Click or drag file to this area to upload</p>
-            <p className="ant-upload-hint">
-                Support for a single or bulk upload. Strictly prohibit from uploading company data or other
-                band files
-            </p>
-        </Dragger>
-        
-        <OperationTable operations = {opers}/>
-        </div>
-  );
-}
-
-function process_order(orders) {
-    orders.map((order,i)=>
-    {
-        parse_sku(order.item_sku);
-        return true;
-    })
-}
-
-function parse_sku(sku) {
-    let str_upc;
-    let str_config;
-    let upgraded_config;
-    let sku_parse=[];
-    let original_config;
-
-    const upc_index = 0;
-    const config_index = 1;
-    //const bundle_index = 2;
-
-    //split upgraded upc, upgraded config, bundle
-    if(typeof sku == 'string') {
-        sku_parse = sku.split('-');
-        str_upc = sku_parse[upc_index];
-        str_config = sku_parse[config_index];
-        
-        console.log("upgraded Config==========="+str_config);
+    async beforeUpload (file) {
+        const text = await file.text();
+        const result = parse(text,{header:true});
     
-        //get original config
-        data.map((data,index) => {
-            if(data.upc === str_upc) {
-                //compare ram;
-                original_config={
-                    upc: data.upc,
-                    ram: data.ram,
-                    m2: data.m2,
-                    hard_drive: data.hard_drive,
-                }
-                //base on original_config generate upgraded config.
-                upgraded_config = generate_config(str_config,original_config);
-                generate_operation(upgraded_config,original_config);
+        let temp = this.state.orders;
+        temp.push(...result.data);
 
-            }
+        this.setState({orders:temp});
+
+        this.process_order(this.state.orders);
+    }
+    process_order = (orders)=>{
+        orders.map((order,i)=>
+        {
+            this.parse_sku(order.item_sku);
             return true;
         })
     }
-}
-//config 1 is the updated configuration
-//config 2 is the original configuration
-function generate_operation(config_1, config_2){
-    //set upc in opers 
-    let a = [];
-    let b = {upc:'1222'};
-    a.push(b);
-    
-    console.log("*****",config_1);
-    console.log("=====",config_2);
 
-
+    parse_sku = (sku)=>{
+        let str_upc;
+        let str_config;
+        let upgraded_config;
+        let sku_parse=[];
+        let original_config;
     
+        const upc_index = 0;
+        const config_index = 1;
+        //const bundle_index = 2;
+    
+        //split upgraded upc, upgraded config, bundle
+        if(typeof sku == 'string') {
+            sku_parse = sku.split('-');
+            str_upc = sku_parse[upc_index];
+            str_config = sku_parse[config_index];
+            
+            console.log("upgraded Config==========="+str_config);
+        
+            //get original config
+            data.map((data,index) => {
+                if(data.upc === str_upc) {
+                    //compare ram;
+                    original_config={
+                        upc: data.upc,
+                        ram: data.ram,
+                        m2: data.m2,
+                        hard_drive: data.hard_drive,
+                    }
+                    //base on original_config generate upgraded config.
+                    upgraded_config = generate_config(str_config,original_config);
+                    this.generate_operation(upgraded_config,original_config);
+    
+                }
+                return true;
+            })
+        }
+    }
+    //config_1: upgraded configuration
+    //config_2: original configuration
+    generate_operation=(config_1, config_2)=>{
+        //set upc in opers 
+        let temp_opers = [...this.state.opers];
+        let temp = {key:1,
+                    upc:config_2.upc};
+        temp_opers.push(temp);
+        this.setState({opers:temp_opers});
+
+        console.log("*****",config_1);
+        console.log("=====",config_2);
+        
+    }
+
+    render(){
+        return(
+            <div className = "drop-zone">
+                <Dragger accept=".csv" 
+                         customRequest={this.customRequest}
+                         onChange = {this.onChange}
+                         beforeUpload = {this.beforeUpload}
+                    >
+                    <p className="ant-upload-drag-icon">
+                        <InboxOutlined/>
+                    </p>
+                    <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                    <p className="ant-upload-hint">
+                        Support for a single or bulk upload. Strictly prohibit from uploading company data or other
+                        band files
+                    </p>
+                </Dragger>
+                <OperationTable operations = {this.state.opers}/>
+            </div>
+        );
+    }
+
 }
+
 
 function generate_config(str, original_config){
     //parse str_config 
@@ -132,7 +147,7 @@ function generate_config(str, original_config){
 
     //set ram in config object
     let ram_combo= generate_ram_combo(upg_ram_capacity,ram_slot_count);
-    console.log("ram combo================"+ram_combo);
+    //console.log("ram combo================"+ram_combo);
     config["ram"] = ram_combo;
     
     //set m2 in config object
@@ -156,7 +171,7 @@ function generate_ram_combo(ram_capacity,ram_slot_count){
             for(let j = 0; j<base_ram_array.length; i++){
 
                 if(ram_capacity===(base_ram_array[i]+base_ram_array[j])) {
-                    console.log("found Ram combo.");
+                    console.log("Found Ram combo.");
                     ram_combo.push(base_ram_array[i]);
                     ram_combo.push(base_ram_array[j]);
                     return ram_combo;
