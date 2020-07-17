@@ -2,7 +2,7 @@ import React from "react";
 import './scss/styles.scss'
 import { parse } from "papaparse";
 import {data} from './data';
-import OperationTable from "./OpeartionTable";
+import OperationTable from "./OperationTable";
 import { Upload, message } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 
@@ -98,13 +98,30 @@ export default class OrderUpload extends React.Component{
     //config_1: upgraded configuration
     //config_2: original configuration
     generate_operation=(config_1, config_2)=>{
-        //set upc in opers 
+
+        let oper_str;
+    
         let temp_opers = [...this.state.opers];
+        
+        for(let i = 0; i<config_2.ram.length; i++){
+            console.log(i);
+            if(config_1.ram[i]!== config_2.ram[i]){
+                let oper_str1 = "拆下：-"+config_2.ram[i]+"GB\n";
+                let oper_str2 = "装上：+"+config_1.ram[i]+"GB\n";
+                
+                oper_str += oper_str1;
+                oper_str += oper_str2;
+            }
+        }
+
+
+        console.log("dddddd",oper_str);
         let temp = {key:1,
-                    upc:config_2.upc};
+            upc:config_2.upc,
+            operation:oper_str,
+        };
         temp_opers.push(temp);
         this.setState({opers:temp_opers});
-
         console.log("*****",config_1);
         console.log("=====",config_2);
         
