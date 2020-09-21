@@ -14,7 +14,17 @@ export default class OrderUpload extends React.Component{
 
         this.state = {
             orders: [],
-            opers: []
+            opers: [],
+            // opers:[
+            //     {
+            //         ram_rm:[],
+            //         ram_ug:[],
+            //         m2_rm:[],
+            //         m2_ug:[],
+            //         hd_rm:[],
+            //         hd_ug:[]
+            //     },
+            // ]
         };
         //this.*** = this.***.bind(this);
         this.beforeUpload = this.beforeUpload.bind(this);
@@ -99,24 +109,23 @@ export default class OrderUpload extends React.Component{
     //config_2: original configuration
     generate_operation=(config_1, config_2)=>{
 
-        let oper_str;
+        let oper_str='';
     
         let temp_opers = [...this.state.opers];
         
+        //add ram operations to oper_str[]
         for(let i = 0; i<config_2.ram.length; i++){
-            console.log(i);
             if(config_1.ram[i]!== config_2.ram[i]){
-                let oper_str1 = "拆下：-"+config_2.ram[i]+"GB\n";
-                let oper_str2 = "装上：+"+config_1.ram[i]+"GB\n";
+                let oper_str1 = "内存拆下：-"+config_2.ram[i]+"GB\n";
+                let oper_str2 = "内存装上：+"+config_1.ram[i]+"GB\n";
                 
                 oper_str += oper_str1;
                 oper_str += oper_str2;
             }
         }
 
-
-        console.log("dddddd",oper_str);
-        let temp = {key:1,
+        let temp = {
+            key:this.state.orders.length,
             upc:config_2.upc,
             operation:oper_str,
         };
@@ -163,12 +172,13 @@ function generate_config(str, original_config){
     let config = {};
 
     //set ram in config object
-    let ram_combo= generate_ram_combo(upg_ram_capacity,ram_slot_count);
+    let ram_combo= generate_ram_config(upg_ram_capacity,ram_slot_count);
     //console.log("ram combo================"+ram_combo);
     config["ram"] = ram_combo;
     
     //set m2 in config object
-    //..............
+    //let m2_config = generate_m2_config(upg_ssd_capacity,ssd_type);
+    //config["m2"] = m2_config;
 
     //set hard drive in config object
     //..............
@@ -178,7 +188,7 @@ function generate_config(str, original_config){
     return config;
 
 }
-function generate_ram_combo(ram_capacity,ram_slot_count){
+function generate_ram_config(ram_capacity,ram_slot_count){
     const base_ram_array = [0,4,8,16];
     let ram_combo=[];
 
@@ -188,7 +198,7 @@ function generate_ram_combo(ram_capacity,ram_slot_count){
             for(let j = 0; j<base_ram_array.length; i++){
 
                 if(ram_capacity===(base_ram_array[i]+base_ram_array[j])) {
-                    console.log("Found Ram combo.");
+                    console.log("STATUS：Found Ram Combo.");
                     ram_combo.push(base_ram_array[i]);
                     ram_combo.push(base_ram_array[j]);
                     return ram_combo;

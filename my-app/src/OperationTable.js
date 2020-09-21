@@ -1,6 +1,7 @@
-import React from "react";
-import {Table, Button} from 'antd';
 import ReactToPrint from 'react-to-print';
+import React, { useState } from 'react';
+import 'antd/dist/antd.css';
+import { Table,Button, Input, InputNumber, Popconfirm, Form } from 'antd';
 
 export default class OperationTable extends React.Component {
    
@@ -10,14 +11,16 @@ export default class OperationTable extends React.Component {
         return(
             <div>
             <OperTable operations={this.props.operations} ref={el => (this.componentRef = el)}/>
+            
             <ReactToPrint
-            trigger={() => {
-              // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
-              // to the root node of the returned component as it will be overwritten.
-              return <Button type="primary">Print this out!</Button>;
+                style={{whiteSpace:'pre'}}
+                trigger={() => {
+                // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
+                // to the root node of the returned component as it will be overwritten.
+                return <Button type="primary">Print this out!</Button>;
             }}
-            content={() => this.componentRef}
-          />
+                content={() => this.componentRef}
+            />
             </div>
         );
     }
@@ -47,9 +50,12 @@ class OperTable extends React.Component {
                 total: this.props.operations.length, 
                 pageSize: this.props.operations.length, 
                 hideOnSinglePage:true}}
+                style={{whiteSpace: 'pre'}}
                 columns={columns} 
                 dataSource={this.props.operations}
             />
         );
     }
 }
+
+

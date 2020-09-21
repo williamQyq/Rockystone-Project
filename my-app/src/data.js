@@ -30,7 +30,7 @@ import React from 'react';
         key: '2',
         upc: '884116361992',
         item_name: 'Dell Pavilion',
-        ram:[8,4],
+        ram:[4,0],
         m2:{
             sata:512,
             pcie:true,
